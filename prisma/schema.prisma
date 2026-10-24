@@ -1,0 +1,226 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  customer
+  admin
+}
+
+enum CourtLocationType {
+  indoor
+  outdoor
+}
+
+enum CourtStatus {
+  active
+  inactive
+  maintenance
+}
+
+enum DayType {
+  weekday
+  weekend
+  any
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  cancelled
+  completed
+  no_show
+}
+
+enum PaymentStatus {
+  unpaid
+  paid
+  refunded
+  partial
+}
+
+enum EventStatus {
+  upcoming
+  completed
+  cancelled
+}
+
+model User {
+  id             String        @id @default(cuid())
+  fullName       String
+  email          String        @unique
+  phone          String?
+  passwordHash   String
+  role           UserRole      @default(customer)
+  isActive       Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  bookings       Booking[]
+  bookingHolds   BookingHold[]
+  blockedSlots   BlockedSlot[] @relation("BlockedSlotCreator")
+}
+
+model Court {
+  id              String            @id @default(cuid())
+  name            String
+  slug            String            @unique
+  courtType       String
+  locationType    CourtLocationType
+  description     String
+  imageUrl        String?
+  status          CourtStatus       @default(active)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  bookings        Booking[]
+  bookingHolds    BookingHold[]
+  blockedSlots    BlockedSlot[]
+  pricingRules    PricingRule[]
+}
+
+model OperatingHours {
+  id          String   @id @default(cuid())
+  dayOfWeek   Int      @unique
+  openTime    String
+  closeTime   String
+  isClosed    Boolean  @default(false)
+}
+
+model PricingRule {
+  id                String      @id @default(cuid())
+  name              String
+  appliesToCourtId  String?
+  appliesToCourt    Court?      @relation(fields: [appliesToCourtId], references: [id], onDelete: SetNull)
+  dayType           DayType     @default(any)
+  startTime         String?
+  endTime           String?
+  durationMinutes   Int?
+  basePrice         Decimal     @db.Decimal(10, 2)
+  currency          String      @default("AED")
+  isActive          Boolean     @default(true)
+  priority          Int         @default(0)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@index([isActive, priority])
+  @@index([appliesToCourtId])
+}
+
+model Booking {
+  id                     String         @id @default(cuid())
+  bookingReference       String         @unique
+  userId                 String?
+  user                   User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  guestName              String?
+  guestEmail             String?
+  guestPhone             String?
+  courtId                String
+  court                  Court          @relation(fields: [courtId], references: [id], onDelete: Restrict)
+  bookingDate            DateTime
+  startTime              String
+  endTime                String
+  durationMinutes        Int
+  status                 BookingStatus  @default(confirmed)
+  paymentStatus          PaymentStatus  @default(unpaid)
+  totalPrice             Decimal        @db.Decimal(10, 2)
+  notes                  String?
+  stripePaymentIntentId  String?
+  stripeSessionId        String?
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+
+  @@index([courtId, bookingDate])
+  @@index([userId])
+  @@index([guestEmail])
+  @@unique([courtId, bookingDate, startTime, endTime])
+}
+
+model BookingHold {
+  id              String     @id @default(cuid())
+  courtId         String
+  court           Court      @relation(fields: [courtId], references: [id], onDelete: Restrict)
+  bookingDate     DateTime
+  startTime       String
+  endTime         String
+  sessionToken    String?
+  userId          String?
+  user            User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  expiresAt       DateTime
+  createdAt       DateTime   @default(now())
+
+  @@index([courtId, bookingDate, expiresAt])
+  @@index([sessionToken])
+  @@index([userId])
+  @@unique([courtId, bookingDate, startTime, endTime])
+}
+
+model BlockedSlot {
+  id               String      @id @default(cuid())
+  courtId          String
+  court            Court       @relation(fields: [courtId], references: [id], onDelete: Restrict)
+  bookingDate      DateTime
+  startTime        String
+  endTime          String
+  reason           String
+  createdByAdminId String
+  createdByAdmin   User        @relation("BlockedSlotCreator", fields: [createdByAdminId], references: [id], onDelete: Restrict)
+  createdAt        DateTime    @default(now())
+
+  @@index([courtId, bookingDate])
+}
+
+model Event {
+  id              String      @id @default(cuid())
+  title           String
+  slug            String      @unique
+  description     String
+  coverImageUrl   String?
+  eventDate       DateTime
+  startTime       String
+  endTime         String
+  status          EventStatus @default(upcoming)
+  locationNote    String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([eventDate, status])
+}
+
+model FaqItem {
+  id              String      @id @default(cuid())
+  question        String
+  answer          String
+  category        String
+  displayOrder    Int         @default(0)
+  isPublished     Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([isPublished, displayOrder])
+}
+
+model ContactMessage {
+  id              String      @id @default(cuid())
+  name            String
+  email           String
+  phone           String?
+  subject         String?
+  message         String
+  isRead          Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+
+  @@index([createdAt, isRead])
+}
+
+model SiteSetting {
+  id              String      @id @default(cuid())
+  key             String      @unique
+  value           Json
+  updatedAt       DateTime    @updatedAt
+}

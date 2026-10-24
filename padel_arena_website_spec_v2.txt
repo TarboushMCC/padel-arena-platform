@@ -1,0 +1,1454 @@
+PADEL ARENA WEBSITE — FULL IMPLEMENTATION SPECIFICATION
+FOR CODEX / DEVELOPER IMPLEMENTATION
+
+====================================================================
+1. DOCUMENT PURPOSE
+====================================================================
+
+This document defines the required pages, behaviors, system logic, API
+structure, database structure, user flows, validation rules, and admin
+workflows for the Padel Arena website.
+
+This specification is intended to be detailed enough for Codex or a
+developer to implement the platform without needing additional planning.
+
+Selected pages to implement in this phase:
+
+1. Home
+2. About Us
+3. Courts / Facilities
+4. Booking
+5. Pricing
+8. Tournaments / Events
+10. Contact Us
+11. FAQ
+12. User Account / My Bookings
+13. Admin Dashboard
+
+The website must serve two main business goals:
+
+1. Present the padel arena as a professional and premium sports venue.
+2. Let users discover information and complete online court bookings.
+
+====================================================================
+2. PRODUCT GOALS
+====================================================================
+
+Primary goal:
+- Increase completed court bookings.
+
+Secondary goals:
+- Increase direct customer inquiries.
+- Display pricing clearly.
+- Promote events and tournaments.
+- Reduce manual booking via phone or WhatsApp.
+- Give staff a simple dashboard to manage operations.
+
+Success criteria:
+- A guest can visit the site and understand the venue within seconds.
+- A user can complete a booking with minimal friction.
+- An admin can manage courts, pricing, bookings, events, and inquiries.
+- The website works well on desktop and mobile devices.
+
+====================================================================
+3. USER TYPES
+====================================================================
+
+3.1 Guest Visitor
+Can:
+- View all public pages
+- Browse courts and prices
+- View tournaments/events
+- Submit contact form
+- Start booking flow
+- Continue as guest checkout if enabled
+
+Cannot:
+- View personal bookings
+- Manage bookings after placement unless connected by email link flow
+- Access admin dashboard
+
+3.2 Registered Customer
+Can:
+- Register and log in
+- Create bookings
+- View upcoming bookings
+- View booking history
+- Cancel or reschedule within policy rules
+- Update profile details
+
+3.3 Admin
+Can:
+- Access admin dashboard
+- Manage courts
+- Manage operating hours
+- Manage pricing rules
+- Create, edit, delete events
+- View and manage all bookings
+- Block maintenance times
+- View contact form submissions
+- Manage FAQ entries
+- Manage homepage banners/content if implemented as editable content
+
+====================================================================
+4. GLOBAL WEBSITE RULES
+====================================================================
+
+4.1 Design Direction
+The site should feel:
+- modern
+- premium
+- sporty
+- clean
+- fast
+
+4.2 Global Navigation
+Header must include:
+- Logo
+- Home
+- About Us
+- Courts
+- Pricing
+- Events
+- FAQ
+- Contact
+- Book Now button
+- Login or Account button
+
+Footer must include:
+- Arena name
+- Address
+- Phone
+- Email
+- Social links
+- Quick links
+- Opening hours
+- Privacy Policy
+- Terms and Conditions
+- Cancellation Policy
+
+4.3 Mobile Rules
+- Mobile-first layout quality is required.
+- Booking flow must be easy on small screens.
+- Buttons must be large enough to tap comfortably.
+- Time slots should become stacked cards or a scrollable schedule on mobile.
+- A sticky "Book Now" button is recommended.
+
+4.4 Accessibility Rules
+- Semantic headings
+- Form labels
+- Keyboard navigability
+- Sufficient color contrast
+- Alt text for meaningful images
+- Clear error states
+
+4.5 Performance Rules
+- Optimized images
+- Lazy loading for galleries
+- Minimal unnecessary animations
+- Fast loading public pages
+- Server-side validation for booking actions
+
+====================================================================
+5. PAGE-BY-PAGE SPECIFICATION
+====================================================================
+
+--------------------------------------------------------------------
+5.1 HOME PAGE
+--------------------------------------------------------------------
+
+Purpose:
+- Introduce the arena
+- Build trust
+- Push the user to booking quickly
+
+Required sections:
+
+A. Hero Section
+Content:
+- Large hero image or short looping muted background video
+- Main headline
+- Supporting line
+- Primary CTA: Book a Court
+- Secondary CTA: View Pricing or Explore Courts
+
+Behavior:
+- CTA buttons route to booking page and pricing page
+- Hero should load fast and remain readable on mobile
+
+B. Quick Booking Widget
+Fields:
+- Date
+- Time
+- Duration
+- Court type (optional filter)
+- Player count (optional)
+- Search availability button
+
+Behavior:
+- This widget does not finalize booking on homepage
+- It redirects the user to Booking page with query parameters applied
+- Example: /booking?date=2026-03-15&time=18:00&duration=90
+
+C. Why Choose Us
+Show 3 to 6 benefits:
+- Premium courts
+- Easy online booking
+- Good location
+- Parking
+- Lighting
+- Community/events
+
+Behavior:
+- Static content cards
+
+D. Facilities Preview
+Cards or image blocks showing:
+- Courts
+- Lounge
+- Showers/changing rooms
+- Parking
+- Equipment rental
+- Café if relevant
+
+Behavior:
+- Each section can link to Courts page
+
+E. Pricing Preview
+Display a few main rates:
+- Weekday
+- Weekend
+- Peak-time
+- Equipment rental preview
+
+Behavior:
+- CTA to Pricing page
+
+F. Events Preview
+Display 3 upcoming events if available
+
+Behavior:
+- Pull active upcoming events from events table
+- If no events exist, show a fallback message and CTA to Contact
+
+G. Testimonials
+Optional but recommended
+- Static or database-driven testimonials
+
+H. Contact/Location Preview
+- Address
+- Opening hours
+- Mini map
+- Contact button
+
+I. Final CTA Banner
+- Strong booking call to action
+- Example: Ready to play? Book your court now.
+
+Acceptance criteria:
+- User can understand core offer immediately
+- User can reach booking within one click
+- Home page feels complete even if some modules have no data
+
+--------------------------------------------------------------------
+5.2 ABOUT US PAGE
+--------------------------------------------------------------------
+
+Purpose:
+- Explain the arena story
+- Build credibility and brand trust
+
+Required sections:
+- Intro hero banner
+- Our story
+- Mission / vision
+- What makes the arena different
+- Team/staff preview
+- Venue images
+
+Behavior:
+- Mostly static content
+- Content can be coded statically or loaded from CMS-like config
+- Should support image blocks and rich text
+
+Acceptance criteria:
+- Page communicates identity clearly
+- Looks professional and branded
+- Can be maintained with simple text/image updates
+
+--------------------------------------------------------------------
+5.3 COURTS / FACILITIES PAGE
+--------------------------------------------------------------------
+
+Purpose:
+- Show the playing experience clearly
+- Help users understand what they are booking
+
+Required sections:
+
+A. Courts Overview
+For each court, optionally show:
+- Court name
+- Court type
+- Indoor / outdoor
+- Surface details if relevant
+- Lighting status
+- Short description
+- Main image
+
+B. Facilities List
+Show venue amenities:
+- Seating area
+- Lockers
+- Showers
+- Parking
+- Pro shop / rentals
+- Café / lounge
+
+C. Gallery
+- Multiple facility photos
+- Courts, lobby, events, night play, lounge, etc.
+
+D. Booking CTA
+- Persistent invitation to book
+
+Behavior:
+- Courts can be shown as cards
+- Cards can optionally link directly to booking page with selected court filter
+- Gallery should support lightbox or modal preview
+
+Acceptance criteria:
+- Visitors understand what courts exist
+- Visitors see what is included in the venue
+- Direct path to booking remains visible
+
+--------------------------------------------------------------------
+5.4 BOOKING PAGE
+--------------------------------------------------------------------
+
+Purpose:
+- Allow user to search availability and complete a court booking
+
+This is the most important functional page.
+
+Required booking flow:
+1. User selects date
+2. User selects duration
+3. User sees available slots/courts
+4. User selects a slot and court
+5. User sees booking summary and price
+6. User logs in or continues as guest if enabled
+7. User enters booking details
+8. User confirms booking
+9. Payment or reservation submission completes
+10. Success page/message shown
+
+Main UI sections:
+
+A. Search / Filter Panel
+Fields:
+- Date
+- Start time (optional)
+- Duration
+- Court type (optional)
+- Indoor/outdoor filter (optional)
+
+Behavior:
+- Changing filters refreshes availability results
+
+B. Availability Results
+Display available courts and time slots.
+Possible layouts:
+- Time-slot grid by court
+- Court cards with available times
+- Horizontal schedule rows
+
+Required behavior:
+- Booked slots must not appear selectable
+- Maintenance-blocked slots must not appear selectable
+- Current day past times must be disabled
+- Arena closed hours must not appear selectable
+
+C. Booking Summary
+Show:
+- Court name
+- Date
+- Start time
+- End time
+- Duration
+- Base price
+- Add-ons if enabled
+- Final total
+
+D. Customer Information Step
+Fields:
+- Full name
+- Email
+- Phone
+- Notes (optional)
+
+If logged in:
+- Pre-fill customer data
+
+E. Payment Step
+Modes:
+- Online payment
+or
+- Reserve now, pay at venue
+The implementation should keep payment mode configurable.
+
+F. Confirmation State
+After success:
+- Show booking reference
+- Show booking details
+- Send confirmation email
+- Save booking in user account if user logged in
+- If guest booking, store by email and confirmation ID
+
+Booking page acceptance criteria:
+- User can complete a booking without confusion
+- Double booking is impossible
+- Total price is always visible before confirmation
+- Bookings persist correctly in database
+
+--------------------------------------------------------------------
+5.5 PRICING PAGE
+--------------------------------------------------------------------
+
+Purpose:
+- Display transparent pricing and reduce repetitive customer questions
+
+Required sections:
+- Standard court pricing
+- Peak vs off-peak pricing
+- Weekday vs weekend pricing
+- Equipment rental
+- Extra services if applicable
+- Policy notes
+
+Pricing display formats:
+- Pricing cards
+- Simple pricing table
+- Court type tabs if multiple court categories exist
+
+Behavior:
+- Pricing should be fetched from pricing rules table
+- Admin should be able to update pricing without code changes
+- If pricing rules are time-based, page should describe them clearly
+
+Acceptance criteria:
+- User understands basic cost quickly
+- No confusing pricing structure
+- CTA to booking page is visible
+
+--------------------------------------------------------------------
+5.6 TOURNAMENTS / EVENTS PAGE
+--------------------------------------------------------------------
+
+Purpose:
+- Promote activity, community, and tournaments
+
+Required sections:
+- Upcoming events
+- Event details cards
+- Past events gallery or archive
+- Optional event inquiry CTA
+
+Event card fields:
+- Title
+- Date
+- Start time
+- Description
+- Cover image
+- Status (upcoming / completed)
+- Registration note or CTA if applicable
+
+Behavior:
+- Upcoming events sorted by nearest date first
+- Past events shown separately
+- If no upcoming events exist, show a graceful empty state
+- Admin creates/edits events from dashboard
+
+Acceptance criteria:
+- Events feel real and current
+- Visitors can understand what is happening at the venue
+- Admin can manage event content easily
+
+--------------------------------------------------------------------
+5.7 CONTACT US PAGE
+--------------------------------------------------------------------
+
+Purpose:
+- Make contacting the arena easy
+
+Required sections:
+- Contact information
+- Address
+- Opening hours
+- Phone
+- Email
+- WhatsApp link/button
+- Google map embed or map block
+- Contact form
+
+Contact form fields:
+- Name
+- Email
+- Phone (optional but recommended)
+- Subject (optional)
+- Message
+
+Behavior:
+- Form validates required fields
+- On submit, saves message in database
+- Sends success feedback to user
+- Optionally notify admin by email
+
+Acceptance criteria:
+- User can contact the arena in under a minute
+- Contact details are highly visible
+- Form submissions are stored reliably
+
+--------------------------------------------------------------------
+5.8 FAQ PAGE
+--------------------------------------------------------------------
+
+Purpose:
+- Answer repeated customer questions
+
+Required content groups:
+- Booking questions
+- Cancellation questions
+- Equipment questions
+- Venue/facility questions
+- General play questions
+
+Recommended display:
+- Accordion UI
+
+Example questions:
+- How do I book a court?
+- Can I cancel or reschedule?
+- Do you provide rackets and balls?
+- What should I wear?
+- How many players can use one court?
+- Do I need an account to book?
+- What payment methods are accepted?
+
+Behavior:
+- Accordion expands/collapses
+- FAQ items can be database-driven so admin can edit them
+- Search box optional
+
+Acceptance criteria:
+- Easy to scan
+- Easy to update
+- Covers the most common support questions
+
+--------------------------------------------------------------------
+5.9 USER ACCOUNT / MY BOOKINGS
+--------------------------------------------------------------------
+
+Purpose:
+- Let registered customers manage their bookings and profile
+
+Required sections:
+
+A. Account Overview
+- Name
+- Email
+- Phone
+- Basic profile info
+
+B. Upcoming Bookings
+For each booking show:
+- Booking reference
+- Court name
+- Date
+- Start/end time
+- Status
+- Actions: View / Cancel / Reschedule if allowed
+
+C. Booking History
+- Previous bookings list
+- Completed / cancelled status
+
+D. Profile Settings
+- Update name
+- Update phone
+- Update password
+
+Behavior:
+- Only authenticated users can access
+- User can only see their own records
+- Cancel button obeys cancellation policy
+- Reschedule obeys policy and availability
+- Booking history sorted newest first
+
+Acceptance criteria:
+- User can clearly see what they booked
+- User cannot access another user's data
+- Cancellation and rescheduling rules are enforced correctly
+
+--------------------------------------------------------------------
+5.10 ADMIN DASHBOARD
+--------------------------------------------------------------------
+
+Purpose:
+- Give arena staff control over operations
+
+Required dashboard modules:
+
+A. Dashboard Overview
+Show cards:
+- Total bookings today
+- Total bookings this week
+- Revenue today
+- Upcoming events count
+- Contact inquiries count
+- Active courts count
+
+B. Bookings Manager
+Features:
+- View all bookings
+- Filter by date
+- Filter by court
+- Filter by status
+- Search by customer name/email
+- View booking detail
+- Cancel booking
+- Create manual booking
+- Reschedule booking
+- Mark payment status if needed
+
+C. Courts Manager
+Features:
+- Create court
+- Edit court
+- Set court active/inactive
+- Add court description
+- Upload court image
+- Block maintenance slots
+
+D. Pricing Manager
+Features:
+- Create/edit pricing rules
+- Set weekday/weekend pricing
+- Set peak time pricing
+- Set special date pricing if needed
+- Set equipment rental fees
+
+E. Events Manager
+Features:
+- Create event
+- Edit event
+- Delete event
+- Upload event image
+- Mark status upcoming/completed/cancelled
+
+F. FAQ Manager
+Features:
+- Create FAQ item
+- Edit FAQ item
+- Reorder items
+- Publish/unpublish item
+
+G. Contact Requests
+Features:
+- View contact submissions
+- Mark as read/unread
+- Delete if needed
+- Filter by date
+
+H. Settings
+Features:
+- Opening hours
+- Arena contact info
+- Booking policy
+- Cancellation window
+- Payment mode configuration
+
+Admin dashboard acceptance criteria:
+- Admin can manage daily operations without database access
+- Admin permissions protect private routes
+- Changes reflect correctly in public pages and booking logic
+
+====================================================================
+6. REACT UI COMPONENT STRUCTURE
+====================================================================
+
+Recommended component structure:
+
+Shared:
+- Layout
+- Header
+- Footer
+- Button
+- SectionTitle
+- CTASection
+- Card
+- Modal
+- Loader
+- EmptyState
+- FormField
+- DatePicker
+- TimeSlotGrid
+- PriceCard
+- MapEmbed
+- Accordion
+- ProtectedRoute
+
+Home:
+- HeroSection
+- QuickBookingWidget
+- FeaturesSection
+- FacilitiesPreview
+- PricingPreview
+- EventsPreview
+- TestimonialsSection
+- ContactPreview
+
+Courts:
+- CourtCard
+- FacilityFeatureList
+- GalleryGrid
+
+Booking:
+- BookingFilters
+- AvailabilityGrid
+- BookingSummary
+- CustomerDetailsForm
+- PaymentStep
+- BookingConfirmation
+
+Pricing:
+- PricingTable
+- PricingCard
+- PolicyNotes
+
+Events:
+- EventCard
+- EventsList
+- PastEventsGallery
+
+Contact:
+- ContactInfoBlock
+- ContactForm
+
+FAQ:
+- FAQAccordion
+- FAQCategory
+
+User Account:
+- AccountSidebar
+- UpcomingBookingsList
+- BookingHistoryTable
+- ProfileForm
+
+Admin:
+- AdminLayout
+- DashboardStats
+- AdminBookingsTable
+- CourtForm
+- PricingRuleForm
+- EventForm
+- FAQForm
+- ContactRequestsTable
+- SettingsForm
+
+====================================================================
+7. FRONTEND ROUTES
+====================================================================
+
+Public routes:
+- /
+- /about
+- /courts
+- /booking
+- /pricing
+- /events
+- /contact
+- /faq
+- /login
+- /register
+
+Customer protected routes:
+- /account
+- /account/bookings
+- /account/profile
+
+Admin protected routes:
+- /admin
+- /admin/bookings
+- /admin/courts
+- /admin/pricing
+- /admin/events
+- /admin/faq
+- /admin/contacts
+- /admin/settings
+
+Optional route:
+- /booking/success
+
+====================================================================
+8. DATABASE SCHEMA
+====================================================================
+
+Use a relational database.
+
+8.1 users
+- id (primary key)
+- full_name
+- email (unique)
+- phone
+- password_hash
+- role (customer | admin)
+- is_active
+- created_at
+- updated_at
+
+8.2 courts
+- id (primary key)
+- name
+- slug
+- court_type
+- location_type (indoor | outdoor)
+- description
+- image_url
+- status (active | inactive | maintenance)
+- created_at
+- updated_at
+
+8.3 operating_hours
+- id
+- day_of_week (0-6 or mon-sun enum)
+- open_time
+- close_time
+- is_closed
+
+8.4 pricing_rules
+- id
+- name
+- applies_to_court_id (nullable, if null applies globally)
+- day_type (weekday | weekend | any)
+- start_time (nullable)
+- end_time (nullable)
+- duration_minutes (nullable)
+- base_price
+- currency
+- is_active
+- priority
+- created_at
+- updated_at
+
+8.5 bookings
+- id
+- booking_reference (unique)
+- user_id (nullable for guest booking)
+- guest_name
+- guest_email
+- guest_phone
+- court_id
+- booking_date
+- start_time
+- end_time
+- duration_minutes
+- status (pending | confirmed | cancelled | completed | no_show)
+- payment_status (unpaid | paid | refunded | partial)
+- total_price
+- notes
+- created_at
+- updated_at
+
+8.6 booking_holds
+- id
+- court_id
+- booking_date
+- start_time
+- end_time
+- session_token or user_id
+- expires_at
+- created_at
+
+Purpose:
+- Prevent double booking during checkout
+- Short expiry, for example 5 to 10 minutes
+
+8.7 blocked_slots
+- id
+- court_id
+- booking_date
+- start_time
+- end_time
+- reason
+- created_by_admin_id
+- created_at
+
+8.8 events
+- id
+- title
+- slug
+- description
+- cover_image_url
+- event_date
+- start_time
+- end_time
+- status (upcoming | completed | cancelled)
+- location_note
+- created_at
+- updated_at
+
+8.9 faq_items
+- id
+- question
+- answer
+- category
+- display_order
+- is_published
+- created_at
+- updated_at
+
+8.10 contact_messages
+- id
+- name
+- email
+- phone
+- subject
+- message
+- is_read
+- created_at
+
+8.11 site_settings
+- id
+- key
+- value
+- updated_at
+
+Examples:
+- arena_name
+- address
+- phone
+- email
+- whatsapp_url
+- cancellation_hours_limit
+- booking_hold_minutes
+- payment_mode
+- opening_notice
+
+====================================================================
+9. DATABASE RELATIONSHIPS
+====================================================================
+
+- users (1) -> (many) bookings
+- courts (1) -> (many) bookings
+- courts (1) -> (many) blocked_slots
+- courts (1) -> (many) pricing_rules
+- admin users (1) -> (many) blocked_slots via created_by_admin_id
+
+Rules:
+- booking cannot overlap existing confirmed booking for the same court/date
+- booking cannot overlap active hold for same court/date
+- booking cannot overlap blocked slot
+- pricing rule chosen must be deterministic using priority logic
+
+====================================================================
+10. API ENDPOINT SPECIFICATION
+====================================================================
+
+Recommended REST API.
+
+10.1 Auth
+POST /api/auth/register
+Request:
+- full_name
+- email
+- phone
+- password
+
+Response:
+- user object
+- auth token or session success
+
+POST /api/auth/login
+Request:
+- email
+- password
+
+Response:
+- user object
+- auth token or session success
+
+POST /api/auth/logout
+
+GET /api/auth/me
+Response:
+- current authenticated user
+
+PUT /api/auth/profile
+Request:
+- full_name
+- phone
+- optional password update
+
+10.2 Public Data
+GET /api/public/home
+Returns:
+- hero content
+- features
+- facility preview
+- pricing preview
+- upcoming events
+- contact summary
+
+GET /api/courts
+Returns:
+- list of active courts
+
+GET /api/pricing
+Returns:
+- active pricing rules formatted for display
+
+GET /api/events
+Query params:
+- status=upcoming|completed
+- page
+- limit
+
+GET /api/faq
+Returns:
+- published FAQ items
+
+GET /api/settings/public
+Returns:
+- public contact details
+- opening hours
+- map info
+- WhatsApp URL
+
+10.3 Booking
+GET /api/availability
+Query params:
+- date
+- duration_minutes
+- court_type (optional)
+- location_type (optional)
+- start_time (optional)
+
+Returns:
+- list of courts
+- available slots
+- blocked or unavailable status omitted or flagged
+
+POST /api/bookings/hold
+Request:
+- court_id
+- booking_date
+- start_time
+- duration_minutes
+
+Response:
+- hold_id
+- expires_at
+- calculated summary
+
+POST /api/bookings
+Request:
+- hold_id
+- user/customer data
+- payment mode
+- notes
+
+Response:
+- booking confirmation
+- booking reference
+
+GET /api/bookings/my
+Authenticated route
+Returns:
+- current user bookings
+
+GET /api/bookings/:id
+Authenticated or admin route with permission checks
+
+POST /api/bookings/:id/cancel
+Authenticated owner or admin
+Validates cancellation policy
+
+POST /api/bookings/:id/reschedule
+Authenticated owner or admin
+Request:
+- new_date
+- new_start_time
+- new_duration
+Validates availability and policy
+
+10.4 Contact
+POST /api/contact
+Request:
+- name
+- email
+- phone
+- subject
+- message
+
+Response:
+- success message
+
+10.5 Admin
+GET /api/admin/dashboard
+Returns:
+- stats summary
+
+GET /api/admin/bookings
+Filters:
+- date
+- status
+- court_id
+- search
+
+POST /api/admin/bookings
+Creates manual booking
+
+PUT /api/admin/bookings/:id
+Edit booking
+
+POST /api/admin/bookings/:id/cancel
+
+POST /api/admin/bookings/:id/reschedule
+
+GET /api/admin/courts
+POST /api/admin/courts
+PUT /api/admin/courts/:id
+DELETE /api/admin/courts/:id or set inactive
+
+GET /api/admin/blocked-slots
+POST /api/admin/blocked-slots
+DELETE /api/admin/blocked-slots/:id
+
+GET /api/admin/pricing
+POST /api/admin/pricing
+PUT /api/admin/pricing/:id
+DELETE /api/admin/pricing/:id
+
+GET /api/admin/events
+POST /api/admin/events
+PUT /api/admin/events/:id
+DELETE /api/admin/events/:id
+
+GET /api/admin/faq
+POST /api/admin/faq
+PUT /api/admin/faq/:id
+DELETE /api/admin/faq/:id
+
+GET /api/admin/contact-messages
+PUT /api/admin/contact-messages/:id/read
+DELETE /api/admin/contact-messages/:id
+
+GET /api/admin/settings
+PUT /api/admin/settings
+
+====================================================================
+11. BOOKING SYSTEM ALGORITHM
+====================================================================
+
+This logic is critical.
+
+11.1 Availability Calculation
+Inputs:
+- requested date
+- requested duration
+- optional court filters
+- optional preferred start time
+
+Algorithm:
+1. Validate date is not in the past.
+2. Load arena operating hours for selected day.
+3. Load active courts.
+4. Filter courts by selected options.
+5. Generate possible time slots within opening hours.
+6. Remove slots overlapping:
+   - confirmed bookings
+   - pending holds that have not expired
+   - blocked maintenance slots
+7. Return valid slots by court.
+8. Optionally compute price per slot in response.
+
+11.2 Hold Creation
+When user selects a slot:
+1. Re-check availability server-side.
+2. Create temporary hold with expiry time.
+3. Return hold details and price summary.
+4. Frontend starts countdown timer.
+
+11.3 Final Booking Creation
+1. User submits booking against hold_id.
+2. Server verifies hold exists and is not expired.
+3. Server verifies slot is still valid.
+4. If payment is required now:
+   - process payment or mark pending external payment
+5. Create booking record.
+6. Delete or invalidate hold.
+7. Send confirmation.
+8. Return booking reference.
+
+11.4 Cancellation Logic
+Rules configurable by setting:
+- cancellation allowed only if booking start is more than X hours away
+- otherwise block cancellation or require admin action
+
+11.5 Reschedule Logic
+1. Check user/admin permission.
+2. Check booking is eligible for reschedule.
+3. Check new slot availability.
+4. Update booking details.
+5. Save audit note if needed.
+6. Notify user.
+
+====================================================================
+12. VALIDATION RULES
+====================================================================
+
+12.1 Auth
+- Email must be unique
+- Password minimum length required
+- Email format validated
+- Name required
+
+12.2 Booking
+- Date required
+- Court required
+- Duration must be valid allowed duration
+- Start time must be within operating hours
+- Booking cannot be in the past
+- Booking cannot overlap another booking, hold, or blocked slot
+- Customer email required
+- Phone required if business wants direct contact
+
+12.3 Contact Form
+- Name required
+- Email required
+- Message required
+- Subject optional
+
+12.4 Admin Forms
+- Court name required
+- Pricing rule base_price must be positive
+- Event title/date required
+- FAQ question/answer required
+
+====================================================================
+13. BUSINESS RULES
+====================================================================
+
+- One court cannot have overlapping bookings.
+- Inactive courts must not appear in public booking search.
+- Maintenance-blocked courts must not allow new bookings in blocked period.
+- If guest checkout is enabled, guest bookings must still store name/email/phone.
+- Booking reference must be unique and human-readable.
+- Completed and cancelled bookings remain in history.
+- Public pages must only show published/active content.
+- Upcoming events are event_date >= today and status = upcoming.
+
+====================================================================
+14. ADMIN DASHBOARD WORKFLOWS
+====================================================================
+
+14.1 Daily Operations Workflow
+Admin opens dashboard and sees:
+- bookings today
+- current revenue
+- upcoming events
+- new contact messages
+
+14.2 Booking Management Workflow
+- Admin filters bookings by date
+- Opens booking details
+- Cancels or reschedules if customer calls
+- Can manually add walk-in booking
+
+14.3 Court Maintenance Workflow
+- Admin selects court
+- Adds blocked slot for maintenance or private use
+- Blocked slot immediately affects availability engine
+
+14.4 Pricing Update Workflow
+- Admin edits pricing rule
+- Change should reflect on pricing page and future bookings
+- Existing confirmed bookings keep stored total_price
+
+14.5 Event Publishing Workflow
+- Admin creates event
+- Adds title, image, description, date
+- Saves as upcoming
+- Event appears on Events page and possibly homepage preview
+
+14.6 FAQ Update Workflow
+- Admin adds new FAQ item
+- Publishes it
+- Item appears on public FAQ page in correct order
+
+====================================================================
+15. ACCEPTANCE CRITERIA BY PAGE
+====================================================================
+
+Home:
+- Has visible booking CTA
+- Quick booking widget routes correctly
+- Shows key arena highlights
+
+About:
+- Displays story and brand details clearly
+
+Courts:
+- Shows active courts and facility features
+- Has clear link to booking
+
+Booking:
+- Can search real availability
+- Can create booking without overlap
+- Displays price before confirmation
+
+Pricing:
+- Shows up-to-date pricing from rules
+- Easy to understand
+
+Events:
+- Shows upcoming and past events
+- Handles empty states properly
+
+Contact:
+- Displays contact info
+- Stores contact form submissions
+
+FAQ:
+- Displays published FAQ items clearly
+
+User Account:
+- Shows only current user's bookings
+- Allows profile updates
+- Cancellation/reschedule rules enforced
+
+Admin:
+- Protected by admin role
+- Can manage courts, pricing, bookings, FAQ, events, messages, settings
+
+====================================================================
+16. SECURITY REQUIREMENTS
+====================================================================
+
+- Passwords must be hashed
+- Protected routes must verify auth
+- Admin routes must verify admin role
+- Server-side validation required for all booking actions
+- Input sanitization required
+- Rate limiting recommended for auth and contact form
+- Sensitive admin actions should be logged if possible
+
+====================================================================
+17. RECOMMENDED PROJECT STRUCTURE
+====================================================================
+
+frontend/
+  src/
+    components/
+    pages/
+    layouts/
+    hooks/
+    services/
+    utils/
+    routes/
+    styles/
+
+backend/
+  src/
+    controllers/
+    routes/
+    middleware/
+    services/
+    validators/
+    models/
+    utils/
+    config/
+
+shared/
+  types/
+
+====================================================================
+18. IMPLEMENTATION PRIORITY
+====================================================================
+
+Phase 1:
+- Public pages
+- Auth
+- Database setup
+- Courts
+- Pricing
+- Contact
+- FAQ
+
+Phase 2:
+- Booking engine
+- Availability API
+- Booking creation
+- User account pages
+
+Phase 3:
+- Admin dashboard
+- Court management
+- Pricing management
+- Events management
+- Contact requests management
+- FAQ management
+- Settings
+
+Phase 4:
+- Polish
+- Testing
+- Error handling
+- Email confirmations
+- SEO basics
+
+====================================================================
+19. TESTING REQUIREMENTS
+====================================================================
+
+Must test:
+- Register/login/logout
+- Protected routes
+- Availability results
+- Hold creation
+- Booking confirmation
+- Double booking prevention
+- Cancel/reschedule rules
+- Admin blocking maintenance slots
+- Pricing rule application
+- Contact form submission
+- Events display
+- FAQ publish/unpublish
+- Mobile booking flow
+
+Edge cases:
+- Expired hold
+- Two users trying to book same slot
+- Closed day
+- Past date booking
+- Inactive court
+- Pricing rule overlap
+- Admin changes pricing after booking already confirmed
+
+====================================================================
+20. FINAL IMPLEMENTATION NOTE
+====================================================================
+
+The site should not behave like a simple static brochure site.
+It should behave like a sports venue platform where the booking engine is
+the center of the customer journey.
+
+The most important technical priorities are:
+- accurate availability
+- strong booking UX
+- admin control
+- mobile usability
+- clean data structure
+
+End of specification.

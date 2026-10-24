@@ -1,0 +1,47 @@
+﻿node_modules
+.next
+out
+coverage
+playwright-report
+test-results
+.env
+.env.local
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+prisma/dev.db
+
+# AI assistant / editor tooling (local only)
+.claude/
+.agent/
+.codex/
+.codebuddy/
+.continue/
+.cursor/
+.gemini/
+.kiro/
+.opencode/
+.qoder/
+.roo/
+.trae/
+.windsurf/
+CLAUDE.md
+AGENTS.md
+graphify-out/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# project-specific
+.npm-cache/
+.tools/
+pgdata*/
+.pg.log
+.pg.pid
+.tmp-node-index.json
+*.tsbuildinfo
+Padel_Arena_Codex_Implementation_Spec conv.txt
+

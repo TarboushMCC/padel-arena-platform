@@ -1,0 +1,51 @@
+{
+  "name": "padel-arena-platform",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "tsx prisma/seed.ts",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "playwright test",
+    "db:start": "powershell -ExecutionPolicy Bypass -File scripts/start-db.ps1",
+    "db:stop": "powershell -ExecutionPolicy Bypass -File scripts/stop-db.ps1",
+    "setup:all": "npm install --cache .npm-cache --no-audit --fund=false && npm run prisma:generate && npm run prisma:migrate -- --name init && npm run prisma:seed"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.19.0",
+    "bcryptjs": "^2.4.3",
+    "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
+    "next": "^14.2.0",
+    "next-auth": "^4.24.11",
+    "nodemailer": "^7.0.10",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "stripe": "^16.10.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.13.5",
+    "@types/nodemailer": "^6.4.17",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0",
+    "prisma": "^5.19.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.6.3",
+    "vitest": "^1.6.1"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}
